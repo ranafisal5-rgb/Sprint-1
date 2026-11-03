@@ -8,5 +8,6 @@ namespace JobApplicationTracker.Practice
 {
     internal class GenericsPractice
     {
+        
     }
 }
