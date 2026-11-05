@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 
 void print<T> (IEnumerable<T> collection)
@@ -85,6 +86,20 @@ Console.WriteLine("\n");
 fifo.Dequeue();
 print(fifo);
 Console.WriteLine("peek is " + fifo.Peek());
+
+///////////////////////////
+///Write a short note explaining why you chose each collection 
+//List<T>   Chosen when I need to access elements by index and maintain insertion order. It allows duplicates
+//Dictionary<TKey, TValue>	Chosen when I need to store key-value pairs and retrieve values efficiently using unique keys
+//HashSet<T> Chosen when I need to store unique elements and prevent duplicates. The order is not guaranteed
+//SortedSet<T>	Chosen when I need unique elements maintained in sorted order
+//Queue<T>	Chosen when I need FIFO (First In, First Out)
+//Stack<T>	Chosen when I need LIFO (Last In, First Out) 
+
+/////////////////////////////
+///
+
+
 
 
 

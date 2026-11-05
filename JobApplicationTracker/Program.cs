@@ -5,6 +5,8 @@
         static void Main(string[] args)
         {
             Console.WriteLine("Hello, World!");
+            generic<string> obj = new generic<string>("heloo");
+
         }
     }
 }
