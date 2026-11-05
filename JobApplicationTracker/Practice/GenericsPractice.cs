@@ -60,7 +60,13 @@ class repo<T>  where T : class
 
 }
 
-
+//  Constraints inform the compiler about the capabilities a type argument must have
+//where t : struct  value type & non-nullable
+//where t : class referance
+//where t : new()  have public parameterless constructor
+//where t : base class   inhert form bas class
+//where t : interface  implement interface
+//  IEntity is used when you need to ensure you have id and uesed in generic (you ensure t have id )
 
 
 
