@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace JobApplicationTracker.Models
 {
-    public enum Recruiter_Status { Pending, Approved, Rejected }
+    public enum Company_Status { Pending, Approved, Rejected }
 
     public class Company :IEntity
     {
@@ -17,11 +17,11 @@ namespace JobApplicationTracker.Models
 
         public string City { set; get; }
 
-        public Recruiter_Status Status { set; get; }
+        public Company_Status Status { set; get; }
 
         public Company()
         {
-            Status = Recruiter_Status.Pending;
+            Status = Company_Status.Pending;
         }
 
     }
