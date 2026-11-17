@@ -12,19 +12,45 @@ namespace JobApplicationTracker.Services
     {
 
         private DataStore<Recruiter> Recruiterlist;
-        public RecruiterService(DataStore<Recruiter> c) { Recruiterlist = c; }
 
-        public bool Add(Recruiter rec)
+        private DataStore<Company> companylist;
+        public RecruiterService(DataStore<Recruiter> r , DataStore<Company> c ) { Recruiterlist = r; companylist = c; }
+
+        public string Add(Recruiter rec)
         {
-            if (Recruiterlist.GetById(rec.Id) != null)
+            if (Recruiterlist.GetById(rec.Id) != null )
             {
-                return false;
+                return "Id must be uniqe";
+            }
+            else if(companylist.GetById(rec.CompanyId) == null)
+            {
+                return "Company Id Not Found";
             }
             else
             {
                 Recruiterlist.Add(rec);
-                return true;
+                return "Add Successfully";
             }
+        }
+
+        public string Update(int id, Recruiter rec)
+        {
+            Recruiter? r = Recruiterlist.GetById(id);
+         
+            if (r == null && id != rec.Id)
+            {
+                return "Invaild Id , Recruiter not found ! ";
+            }
+            else if(companylist.GetById(rec.CompanyId) == null)
+            {
+                return "Company Id Not Found";
+            }
+            else
+            {
+                Recruiterlist.Update(r , rec);
+                return "Update Successfully";
+            }
+
         }
 
         public bool Remove(int id)
@@ -42,7 +68,20 @@ namespace JobApplicationTracker.Services
             }
         }
 
+       
+
+
+
         public List<Recruiter> GetAll() { return Recruiterlist.GetAll; }
+
+        public void display()
+        {
+            foreach (var l in Recruiterlist)
+            {
+                l.Print();
+                Console.WriteLine();
+            }
+        }
 
     }
 }

@@ -224,7 +224,7 @@ namespace JobApplicationTracker
         }
 
 
-        static void RecruiterMenu()
+        static void RecruiterMenu(RecruiterService recruiterService)
         {
             while(true)
 {            
@@ -233,13 +233,124 @@ namespace JobApplicationTracker
             switch (ch)
             {
                 case "1":
+                        {
+
+                            Console.WriteLine("Inter Recruiter ID");
+                            int id;
+                            while (!int.TryParse(Console.ReadLine(), out id) || id <= 0)
+                            {
+                                Console.WriteLine("Invalid ID. Please enter a number:");
+                            }
+                            Console.WriteLine("Inter Recruiter Name");
+                            string name = Console.ReadLine() ?? "";
+                            while (string.IsNullOrWhiteSpace(name))
+                            {
+                                Console.WriteLine("Name is required. Please enter a valid name:");
+                                name = Console.ReadLine() ?? "";
+                            }
+                            Console.WriteLine("Inter Recruiter Email");
+                            string email = Console.ReadLine() ?? "";
+                            Console.WriteLine("Inter Recruiter CompanyId");
+                            int companyid ;
+                            while (!int.TryParse(Console.ReadLine(), out companyid) || companyid <= 0 )
+                            {
+                                Console.WriteLine("Invalid ID. Please enter a number:");
+                            }
+
+                            try{
+                                Recruiter newrec = new Recruiter() { Id = id, Name = name, Email = email, CompanyId = companyid };
+                                Console.WriteLine(recruiterService.Add(newrec));
+                                recruiterService.display();
+                            }
+                            catch(FormatException ex)
+                            {
+                                Console.WriteLine(ex.Message);
+
+                            }
+
+
+
+
+                        }
                     break;
                 case "2":
+                        {
+
+                            Console.WriteLine("Inter Recruiter ID You Need To Update");
+                            int id;
+                            while (!int.TryParse(Console.ReadLine(), out id) || id <= 0)
+                            {
+                                Console.WriteLine("Invalid ID. Please enter a number:");
+                            }
+
+
+                            Console.WriteLine("Inter New Recruiter Name");
+                            string name = Console.ReadLine() ?? "";
+                            while (string.IsNullOrWhiteSpace(name))
+                            {
+                                Console.WriteLine("Name is required. Please enter a valid name:");
+                                name = Console.ReadLine() ?? "";
+                            }
+                            Console.WriteLine("Inter Recruiter New Email");
+                            string email = Console.ReadLine() ?? "";
+                            Console.WriteLine("Inter Recruiter New CompanyId");
+                            int companyid;
+                            while (!int.TryParse(Console.ReadLine(), out companyid) || companyid <= 0)
+                            {
+                                Console.WriteLine("Invalid ID. Please enter a number:");
+                            }
+
+                            try
+                            {
+                                Recruiter newrec = new Recruiter() { Id = id, Name = name, Email = email, CompanyId = companyid };
+                                Console.WriteLine(recruiterService.Update( id , newrec));
+                                recruiterService.display();
+                            }
+                            catch (FormatException ex)
+                            {
+                                Console.WriteLine(ex.Message);
+
+                            }
+    
+
+                        }
                     break;
                 case "3":
+                        {
+                            Console.WriteLine("Inter Recruiter ID You Need To Update");
+                            int id;
+                            while (!int.TryParse(Console.ReadLine(), out id) || id <= 0)
+                            {
+                                Console.WriteLine("Invalid ID. Please enter a number:");
+                            }
+
+                            if(recruiterService.Remove(id))
+                            {
+                                Console.WriteLine("remove Successfully");
+                                recruiterService.display();
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invaild Id , Recruiter not found !");
+                            }
+
+                        }
                     break;
                 case "4":
+                        {
+                            List<Recruiter> all = recruiterService.GetAll();
+                            foreach(var i in all)
+                            {
+                                i.Print();
+                                Console.WriteLine("\n");
+
+
+                            }
+                        }
                     break;
+                        {
+
+                        }
                     case "5": return;
                     break;
                 default:
@@ -361,7 +472,10 @@ namespace JobApplicationTracker
             Recruiter rec2 = new Recruiter() { Id = 3, Name = "Omar Ali", Email = "omar@devsphere.com", CompanyId = 3 };
 
             DataStore<Recruiter> Recruiters = new DataStore<Recruiter>();
-
+            RecruiterService recruiterService = new RecruiterService(Recruiters, companies);
+            recruiterService.Add(rec1);
+            recruiterService.Add(rec2);
+            recruiterService.Add(rec3);
             ////////////////////////////
 
             Job j1 = new Job()
@@ -540,7 +654,7 @@ namespace JobApplicationTracker
                        CompanyMenu(companyService);
                         break;
                     case 2:
-                        RecruiterMenu();
+                        RecruiterMenu(recruiterService);
                         break;
                     case 3:
                         JobMenu();

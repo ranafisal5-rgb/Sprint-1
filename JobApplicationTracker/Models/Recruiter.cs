@@ -30,7 +30,13 @@ namespace JobApplicationTracker.Models
 
         public int CompanyId { set; get; }
 
-        
+        public void Print()
+        {
+            Console.WriteLine($"ID: {Id}");
+            Console.WriteLine($"Name: {Name}");
+            Console.WriteLine($"Email: {Email}");
+            Console.WriteLine($"Company ID: {CompanyId}");
+        }
 
 
 
