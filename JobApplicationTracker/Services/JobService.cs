@@ -32,7 +32,7 @@ namespace JobApplicationTracker.Services
 
         public bool remove(int id)
         {
-            Job x = joblist.GetById(id);
+            Job? x = joblist.GetById(id);
             if ( x != null )
             {
                 joblist.Remove(x);
@@ -47,16 +47,30 @@ namespace JobApplicationTracker.Services
 
         }
 
+        public bool Update(int id, Job jb)
+        {
+            Job? j = joblist.GetById(id);
+            bool retrn = false;
+
+            if (j != null && id == jb.Id)
+            {
+                retrn = joblist.Update(j, jb);
+            }
+
+            return retrn;
+
+
+        }
         public List<Job> GetAll() { return joblist.GetAll; }
 
-      
+        public Job? job_by_Id(int id)
+        {
+                
+            jobbyId.TryGetValue(id, out Job? j);
+            return j;
 
 
-
-
-
-
-
+        }
 
     }
 }

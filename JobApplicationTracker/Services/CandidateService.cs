@@ -29,7 +29,7 @@ namespace JobApplicationTracker.Services
         public bool Remove(int id)
 
         {
-            Candidate c = candidatelist.GetById(id);
+            Candidate? c = candidatelist.GetById(id);
             if (c != null)
             {
                 candidatelist.Remove(c);
@@ -40,13 +40,25 @@ namespace JobApplicationTracker.Services
                 return false;
             }
         }
-        public bool Update(int id, Company comp)
+        public bool Update(int id, Candidate can)
         {
-           
+            Candidate? c = candidatelist.GetById(id);
+            bool retrn = false;
 
-        }//dont know
+            if (c != null && id == can.Id)
+            {
+                retrn = candidatelist.Update(c, can);
+            }
+
+            return retrn;
+        }
 
         public List<Candidate> GetAll() { return candidatelist.GetAll; }
+
+        public Candidate? GetById(int id)
+        {
+            return candidatelist.GetById(id);
+        }
 
     }
 }

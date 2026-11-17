@@ -1,5 +1,6 @@
 ﻿using JobApplicationTracker.Data;
 using JobApplicationTracker.Models;
+using JobApplicationTracker.Services;
 using Microsoft.VisualBasic;
 
 namespace JobApplicationTracker
@@ -7,32 +8,212 @@ namespace JobApplicationTracker
 
     internal class Program
     {
-       static void CompanyMenu()
+       static void CompanyMenu(CompanyService companyService)
         {
             while(true)
             {
                
                 Console.WriteLine("========== COMPANIES ==========\r\n1. Add Company\r\n2. Update Company\r\n3. Remove Company\r\n4. List All Companies\r\n5. Change Company Status\r\n6. List Companies By Status\r\n7. Undo Last Status Change\r\n8. Back");
-                string ch = Console.ReadLine();
+                string ch = Console.ReadLine()??"";
                 switch (ch)
                 {
                     case "1":
-                        break;
+                   {
+                        Console.WriteLine("Inter Company ID");
+                         int id;
+                        while (!int.TryParse(Console.ReadLine(), out id) || id <= 0)
+                        {
+                          Console.WriteLine("Invalid ID. Please enter a number:");
+                        }
+                        Console.WriteLine("Inter Company Name");
+                        string name = Console.ReadLine() ?? "";
+                         while (string.IsNullOrWhiteSpace(name))
+                         {
+                           Console.WriteLine("Name is required. Please enter a valid name:");
+                           name = Console.ReadLine() ?? "";
+                          }
+                         Console.WriteLine("Inter Company Ciry");
+                        string city = Console.ReadLine()??"";
+                        Console.WriteLine("Inter Company Indastry");
+                        string indastry = Console.ReadLine()??"";
+                        Company newcomp = new Company() {Id=id , Name = name , City = city , Industry = indastry };
+                            if (companyService.Add(newcomp))
+                            {
+                                Console.WriteLine("add successfully");
+                                companyService.display();
+
+                            }
+                            else
+                                Console.WriteLine("id must be uniqe");
+                        }
+                            break;
                     case "2":
+                        {
+                            Console.WriteLine("Inter Company ID You Need To Update");
+                            int id;
+                            while (!int.TryParse(Console.ReadLine(), out id) || id <= 0)
+                            {
+                                Console.WriteLine("Invalid ID. Please enter a number:");
+                            }
+
+
+                            Console.WriteLine("Inter New Company Name");
+                            string name = Console.ReadLine() ?? "";
+                            while (string.IsNullOrWhiteSpace(name))
+                            {
+                                Console.WriteLine("Name is required. Please enter a valid name:");
+                                name = Console.ReadLine() ?? "";
+                            }
+                            Console.WriteLine("Inter Company Ciry");
+                            string city = Console.ReadLine() ?? "";
+                            Console.WriteLine("Inter Company Indastry");
+                            string indastry = Console.ReadLine() ?? "";
+                            Company newcomp = new Company() { Id = id, Name = name, City = city, Industry = indastry };
+                            if (companyService.Update(id , newcomp))
+                            {
+                                Console.WriteLine("Update successfully");
+                                companyService.display();
+                            }
+                                
+                            else
+                                Console.WriteLine("Invalid ID , company not found !");
+                            
+                        }
                         break;
                     case "3":
+                        {
+                            Console.WriteLine("Inter Company ID You Need To delete");
+                            int id;
+                            while (!int.TryParse(Console.ReadLine(), out id) || id <= 0)
+                            {
+                                Console.WriteLine("Invalid ID. Please enter a number:");
+                            }
+
+                            if(companyService.Remove(id))
+                            {
+                                Console.WriteLine("Company Removed successfully");
+                                companyService.display();
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid ID , company not found !");
+                            }
+                        }
                         break;
                     case "4":
+                        {
+                            List < Company > all = companyService.GetAll();
+                            foreach(var i in all)
+                            {
+                                i.print();
+                                Console.WriteLine();
+                            }
+
+
+                        }
                         break;
                     case "5":
+                        {
+                            Console.WriteLine("Inter Company ID You Need To Change Status");
+                            int id;
+                            while (!int.TryParse(Console.ReadLine(), out id) || id <= 0)
+                            {
+                                Console.WriteLine("Invalid ID. Please enter a number:");
+                            }
+                            Console.WriteLine("Inter 1 Aproved\n2 Regected");
+                            string? state = Console.ReadLine()??"";
+                            while(state != "1" && state != "2")
+                            {
+                                Console.WriteLine("please inter 1 or 2");
+                                state = Console.ReadLine()??"";
+
+                            }
+
+                            if (state == "1")
+                            {
+                                if(companyService.Chang_Status(id , Company_Status.Approved))
+                                {
+                                    Console.WriteLine(" Status Changed successfully");
+                                    companyService.display();
+
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Invalid ID , company not found !");
+
+                                }
+
+
+                            }
+                            if (state == "2")
+                            {
+                                if (companyService.Chang_Status(id, Company_Status.Rejected))
+                                {
+                                    Console.WriteLine(" Status Changed successfully");
+                                    companyService.display();
+
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Invalid ID , company not found !");
+
+                                }
+
+                            }
+
+                        }
                         break;
                     case "6":
+                        {
+                            Console.WriteLine("1 Aproved\n2 Regected\n3 Regected");
+                            string? state = Console.ReadLine() ?? "";
+                            while (state != "1" && state != "2" && state != "3")
+                            {
+                                Console.WriteLine("please inter 1 or 2 or 3");
+                                state = Console.ReadLine() ?? "";
+
+                            }
+                            List<Company> statelist = [];
+                            if (state == "1")
+                            {
+                                statelist = companyService.List_by_status(Company_Status.Approved);
+                                foreach(var i in statelist)
+                                {
+                                    i.print();
+                                    Console.WriteLine();
+                                }
+                            }
+                            else if (state == "2")
+                            {
+                                statelist = companyService.List_by_status(Company_Status.Rejected);
+                                foreach (var i in statelist)
+                                {
+                                    i.print();
+                                    Console.WriteLine();
+                                }
+                            }
+                            if (state == "3")
+                            {
+                                statelist = companyService.List_by_status(Company_Status.Pending);
+                                foreach (var i in statelist)
+                                {
+                                    i.print();
+                                    Console.WriteLine();
+                                }
+                            }
+
+
+
+                        }
                         break;
                     case "7":
+                        {
+                           Console.WriteLine( companyService.Undo() );
+                            companyService.display();
+                        }
                         break;
                     case "8":
                         return;
-                        break;
                     default:
                         Console.WriteLine("invalud number");
                         break;
@@ -165,6 +346,11 @@ namespace JobApplicationTracker
             { Name = "DevSphere", Id = 3, Industry = "tech", City = "Giza" };
 
             DataStore<Company> companies = new DataStore<Company>();
+            CompanyService companyService = new CompanyService(companies);
+            companyService.Add(TechNova);
+            companyService.Add(CloudNine);
+            companyService.Add(DevSphere);
+
 
             /////////////////
 
@@ -351,7 +537,7 @@ namespace JobApplicationTracker
                 switch (choise)
                 {
                     case 1:
-                       CompanyMenu();
+                       CompanyMenu(companyService);
                         break;
                     case 2:
                         RecruiterMenu();

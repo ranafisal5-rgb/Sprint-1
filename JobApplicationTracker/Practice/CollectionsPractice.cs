@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Xml;
 
 
-public class collections
+public class Collections
 {
 
     public void print<T>(IEnumerable<T> collection)
@@ -53,7 +53,7 @@ public class collections
         Dictionary<int, string> id_name = new Dictionary<int, string>() { [1] = "rana" };
 
         id_name.Add(2, "mona");
-        if (id_name.TryGetValue(2, out string name))
+        if (id_name.TryGetValue(2, out string? name))
             Console.WriteLine(name);
         Console.WriteLine(id_name.ContainsKey(3) ? "key 3 is found" : "key 3 not found");
         print(id_name);
@@ -64,6 +64,7 @@ public class collections
         Console.WriteLine("\n hashset");
         HashSet<int> uniqe = [1, 2, 3, 3, 4];
         uniqe.Add(1);
+        uniqe.Contains(1);
         print(uniqe);
         //////////
         //stack

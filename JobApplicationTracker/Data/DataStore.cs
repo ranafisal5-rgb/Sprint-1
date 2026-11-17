@@ -24,12 +24,16 @@ namespace JobApplicationTracker.Data
             items.Add(item);
         }
 
-        public void Update (int index , T item)
+        public bool Update (T  olditem , T newitem)
         {
-            if (index < items.Count && index >= 0)
-                items[index] = item;
+            int index = items.IndexOf(olditem);
+            if (index != -1)
+            {
+                items[index] = newitem;
+                return true;
+            }
             else
-                throw new ArgumentOutOfRangeException(nameof(index), "Index is out of range.");
+                return false;
         }
 
         public void Remove (T item)

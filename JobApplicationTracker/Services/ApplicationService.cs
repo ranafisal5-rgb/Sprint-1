@@ -5,35 +5,69 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace JobApplicationTracker.Services
 {
     public class ApplicationService
     {
+        private static int index = 1;
         private DataStore<Application> Applicationlist;
-        public ApplicationService(DataStore<Application> c) { Applicationlist = c; }
+        private CandidateService candidate;
+        private JobService Job;
+        private CompanyService company;
+        private HashSet<(int jobid, int candidateid)> jobcand = [];
 
-        public bool Add(Application com)
+        public ApplicationService(DataStore<Application> app , CandidateService can , JobService J , CompanyService com) { Applicationlist = app; candidate = can; company = com; Job = J; }
+        
+        public string Apply_to_job(int idjob , int idcand)
         {
-            if (Applicationlist.GetById(com.Id) != null)
+           Job? j = Job.job_by_Id(idjob);
+           Candidate? can = candidate.GetById(idcand);
+
+            if (j == null )
             {
-                return false;
+                return " Job not found";
             }
-            else
+            if ( can == null)
             {
-                Applicationlist.Add(com);
-                return true;
+                return "Candidate not found ";
             }
+            if (j.IsOpen == false)
+            {
+                return "Job is closed";
+            }
+
+            Company? com = company.GetById(j.CompanyId);
+
+             if ( com == null || com.Status != Company_Status.Approved )
+            {
+                return "Company is not approved or not found";
+            }
+            if (jobcand.Contains((idjob,idcand)))
+            {
+                return "Candidate already applied";
+            }
+         
+                Application app = new Application() { Id = index++, CandidateId = idcand, JobId = idjob, Status = Application_Status.Submitted, AppliedDate = DateTime.Now };
+                Applicationlist.Add(app);
+                jobcand.Add((idjob, idcand));
+                return "Application submitted successfully";
+            
+
+
+
         }
+
+
 
         public bool Remove(int id)
 
         {
-            Application c = Applicationlist.GetById(id);
+            Application? c = Applicationlist.GetById(id);
             if (c != null)
             {
                 Applicationlist.Remove(c);
+                jobcand.Remove((c.JobId , c.CandidateId ));
                 return true;
             }
             else
@@ -41,13 +75,9 @@ namespace JobApplicationTracker.Services
                 return false;
             }
         }
-        public bool Update(int id, Company comp)
-        {
-
-
-        }//dont know
 
         public List<Application> GetAll() { return Applicationlist.GetAll; }
 
     }
+
 }

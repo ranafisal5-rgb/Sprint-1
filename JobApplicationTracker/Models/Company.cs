@@ -24,5 +24,10 @@ namespace JobApplicationTracker.Models
             Status = Company_Status.Pending;
         }
 
+        public void print ()
+        {
+            Console.WriteLine($"company ID :{Id}\ncompany Name :{Name}\ncompany sataus :{Status}\ncompany City :{City}\ncompany Industry:{Industry}  ");
+        }
+
     }
 }
