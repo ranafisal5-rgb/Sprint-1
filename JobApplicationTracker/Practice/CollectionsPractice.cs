@@ -23,12 +23,13 @@ public class collections
         //list
         Console.WriteLine("////list//////");
         List<int> nums = new List<int>() { 1, 2, 3, 4 };
+        
         List<string> names = ["rana", "mona", "hoda"];
         nums.Add(5);
         nums.Add(6);
         Console.WriteLine("/////print list/////");
         foreach (var x in nums)
-            Console.WriteLine(x);
+           { Console.WriteLine(x); }
         Console.WriteLine("////delete 1//////");
         nums.Remove(1);
         print(nums);
