@@ -1,15 +1,22 @@
 ﻿using JobApplicationTracker.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace JobApplicationTracker.Data
 {
-    public class DataStore<T> where T : class ,  IEntity 
+    public class DataStore<T> : IEnumerable<T> where T : class ,  IEntity 
     {
         List<T> items = [];
+        public IEnumerator<T> GetEnumerator() { return items.GetEnumerator(); }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
 
 
         public void Add (T item)
