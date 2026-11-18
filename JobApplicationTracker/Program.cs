@@ -736,7 +736,7 @@ namespace JobApplicationTracker
             { Name = "TechNova", Id = 1 , Industry= "tech" , City="Alx" , Status=Company_Status.Approved };
 
             Company CloudNine = new Company()
-            { Name = "CloudNine", Id = 2, Industry = "tech", City = "Cairo", Status = Company_Status.Rejected };
+            { Name = "CloudNine", Id = 2, Industry = "tech", City = "Cairo", Status = Company_Status.Approved };
 
             Company DevSphere = new Company()
             { Name = "DevSphere", Id = 3, Industry = "tech", City = "Giza" };
@@ -823,7 +823,7 @@ namespace JobApplicationTracker
                 Location = "Cairo",
                 IsOpen = true,
                 PostedDate = new DateTime(2026, 8, 10),
-                RecruiterId = 3,
+                RecruiterId = 2,
                 Description = "-",
                 CompanyId = 3
             };
@@ -836,7 +836,7 @@ namespace JobApplicationTracker
                 Location = "Cairo",
                 IsOpen = false,
                 PostedDate = new DateTime(2026, 10, 15),
-                RecruiterId = 3,
+                RecruiterId = 2,
                 Description = "-",
                 CompanyId = 3
             };
@@ -949,25 +949,25 @@ namespace JobApplicationTracker
                     "5. Manage Applications\r\n" +
                     "6. Exit\r\n\r\n" +
                     "Enter your choice:");
-                int choise = int.Parse(Console.ReadLine());
+                string choise = Console.ReadLine();
                 switch (choise)
                 {
-                    case 1:
+                    case "1":
                        CompanyMenu(companyService);
                         break;
-                    case 2:
+                    case "2":
                         RecruiterMenu(recruiterService);
                         break;
-                    case 3:
+                    case "3":
                         JobMenu(jobService);
                         break;
-                    case 4:
+                    case "4":
                         CandidateMenu(candidateService);
                         break;
-                    case 5:
+                    case "5":
                         ApplicationMenu(applicationService);
                         break;
-                    case 6:
+                    case "6":
                         return;
                         break;
                     default:
