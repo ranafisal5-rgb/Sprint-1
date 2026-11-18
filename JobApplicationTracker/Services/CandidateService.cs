@@ -11,19 +11,24 @@ namespace JobApplicationTracker.Services
     public class CandidateService
     {
         private DataStore<Candidate> candidatelist;
+        private HashSet<string> emails = [];
         public CandidateService(DataStore<Candidate> c) { candidatelist = c; }
 
-        public bool Add(Candidate com)
+        public string Add(Candidate com)
         {
             if (candidatelist.GetById(com.Id) != null)
             {
-                return false;
+                return "Id must be uniqe";
             }
-            else
+            else if (emails.Contains(com.Email))
             {
-                candidatelist.Add(com);
-                return true;
+                return "Email must be uniqe";
             }
+            
+                candidatelist.Add(com);
+                emails.Add(com.Email);
+                return "Add Successfully";
+            
         }
 
         public bool Remove(int id)
@@ -32,6 +37,7 @@ namespace JobApplicationTracker.Services
             Candidate? c = candidatelist.GetById(id);
             if (c != null)
             {
+                emails.Remove(c.Email);
                 candidatelist.Remove(c);
                 return true;
             }
@@ -40,17 +46,22 @@ namespace JobApplicationTracker.Services
                 return false;
             }
         }
-        public bool Update(int id, Candidate can)
+        public string Update(int id, Candidate can)
         {
             Candidate? c = candidatelist.GetById(id);
-            bool retrn = false;
-
-            if (c != null && id == can.Id)
+            if (c == null)
             {
-                retrn = candidatelist.Update(c, can);
+                return "Invaild Id , Candidate not found !";
             }
+            else if (c.Email != can.Email && emails.Contains(can.Email))
+            {
+                return "Email must be uniqe";
+            }
+            emails.Remove(c.Email);
+            emails.Add(can.Email);
+            candidatelist.Update(c , can);
+            return "remore Successfully";
 
-            return retrn;
         }
 
         public List<Candidate> GetAll() { return candidatelist.GetAll; }

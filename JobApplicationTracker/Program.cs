@@ -509,10 +509,18 @@ namespace JobApplicationTracker
                     break;
                 case "4":
                         {
-
+                            printjob(jobservice);
                         }
                     break;
                 case "5":
+                        {
+                            Console.WriteLine("Enter Job ID:");
+                            int id;
+                            while (!int.TryParse(Console.ReadLine(), out id) || id <= 0)
+                                Console.WriteLine("Invalid ID. Please enter a valid number:");
+                            Job? job = jobservice.job_by_Id(id);
+                            Console.WriteLine((job != null ? "job found" : "Invaild Id , Job not found !"));
+                        }
                     break;
                 case "6": return;
                     break;
@@ -524,7 +532,21 @@ namespace JobApplicationTracker
             }
         }
 
-        static void CandidateMenu()
+        static void printcandidate(CandidateService candidate)
+        {
+            foreach (var i in candidate.GetAll())
+            {
+                Console.WriteLine($"ID: {i.Id}");
+                Console.WriteLine($"Full Name: {i.FullName}");
+                Console.WriteLine($"Email: {i.Email}");
+                Console.WriteLine($"Phone: {i.Phone}");
+                Console.WriteLine($"Years Of Experience: {i.YearsOfExperience}");
+                Console.WriteLine("--------------------------------");
+            }
+        }
+
+
+        static void CandidateMenu(CandidateService candidateService)
         {
             while (true) { 
 
@@ -533,12 +555,112 @@ namespace JobApplicationTracker
             switch (ch)
             {
                 case "1":
+                        {
+                            Console.WriteLine("Enter Candidate ID:");
+                            int id;
+                            while (!int.TryParse(Console.ReadLine(), out id) || id <= 0)
+                                Console.WriteLine("Invalid ID. Please enter a valid number:");
+
+                            Console.WriteLine("Enter Full Name:");
+                            string name = Console.ReadLine() ?? "";
+                            while (string.IsNullOrWhiteSpace(name))
+                            {
+                                Console.WriteLine("Name is required. Please enter a valid name:");
+                                name = Console.ReadLine() ?? "";
+                            }
+
+                            Console.WriteLine("Enter Email:");
+                            string email = Console.ReadLine() ?? "";
+
+                            Console.WriteLine("Enter Phone:");
+                            string phone = Console.ReadLine() ?? "";
+
+                            Console.WriteLine("Enter Years Of Experience:");
+                            int experience;
+                            while (!int.TryParse(Console.ReadLine(), out experience) || experience < 0)
+                                Console.WriteLine("Invalid Experience. Please enter a valid number:");
+
+                            try
+                            {
+                                Candidate newCandidate = new Candidate()
+                                {
+                                    Id = id,
+                                    FullName = name,
+                                    Email = email,
+                                    Phone = phone,
+                                    YearsOfExperience = experience
+                                };
+
+                                Console.WriteLine(candidateService.Add(newCandidate));
+                                printcandidate(candidateService);
+                            }
+                            catch (FormatException ex)
+                            {
+                                Console.WriteLine(ex.Message);
+                            }
+                        }
                     break;
                 case "2":
+                        {
+                            Console.WriteLine("Enter Candidate ID:");
+                            int id;
+                            while (!int.TryParse(Console.ReadLine(), out id) || id <= 0)
+                                Console.WriteLine("Invalid ID. Please enter a valid number:");
+
+                            Console.WriteLine("Enter Full Name:");
+                            string name = Console.ReadLine() ?? "";
+                            while (string.IsNullOrWhiteSpace(name))
+                            {
+                                Console.WriteLine("Name is required. Please enter a valid name:");
+                                name = Console.ReadLine() ?? "";
+                            }
+
+                            Console.WriteLine("Enter Email:");
+                            string email = Console.ReadLine() ?? "";
+
+                            Console.WriteLine("Enter Phone:");
+                            string phone = Console.ReadLine() ?? "";
+
+                            Console.WriteLine("Enter Years Of Experience:");
+                            int experience;
+                            while (!int.TryParse(Console.ReadLine(), out experience) || experience < 0)
+                                Console.WriteLine("Invalid Experience. Please enter a valid number:");
+
+                            try
+                            {
+                                Candidate updatedCandidate = new Candidate()
+                                {
+                                    Id = id,
+                                    FullName = name,
+                                    Email = email,
+                                    Phone = phone,
+                                    YearsOfExperience = experience
+                                };
+
+                                Console.WriteLine(candidateService.Update(id, updatedCandidate));
+                                printcandidate(candidateService);
+                            }
+                            catch (FormatException ex)
+                            {
+                                Console.WriteLine(ex.Message);
+                            }
+                        }
                     break;
                 case "3":
+                        {
+                            Console.WriteLine("Enter Candidate ID:");
+                            int id;
+                            while (!int.TryParse(Console.ReadLine(), out id) || id <= 0)
+                            Console.WriteLine("Invalid ID. Please enter a valid number:");
+
+                            Console.WriteLine(candidateService.Remove(id) ? "Remove Successfully " : "Invaild Id , Candidate not found !");
+                            printcandidate(candidateService);
+                        }
                     break;
                 case "4":
+                        {
+                            printcandidate(candidateService);
+                        }
                     break;
                 case "5":
                     return;
@@ -720,7 +842,7 @@ namespace JobApplicationTracker
 
             Candidate cand2 = new Candidate()
             {
-                Id = 3,
+                Id = 2,
                 Email = "mariam@gmail.com",
 
                 FullName = "Mariam Adel",
@@ -772,6 +894,13 @@ namespace JobApplicationTracker
             };
 
             DataStore<Candidate> Candidates = new DataStore<Candidate>();
+            CandidateService candidateService = new CandidateService(Candidates);
+            candidateService.Add(cand1);
+            candidateService.Add(cand2);
+            candidateService.Add(cand3);
+            candidateService.Add(cand4);
+            candidateService.Add(cand5);
+
 
             /////////////////////////////////////
             /////////////////////////////////////
@@ -804,7 +933,7 @@ namespace JobApplicationTracker
                         JobMenu(jobService);
                         break;
                     case 4:
-                        CandidateMenu();
+                        CandidateMenu(candidateService);
                         break;
                     case 5:
                         ApplicationMenu();
