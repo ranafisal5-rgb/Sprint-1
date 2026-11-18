@@ -342,7 +342,7 @@ namespace JobApplicationTracker
                             foreach(var i in all)
                             {
                                 i.Print();
-                                Console.WriteLine("\n");
+                                Console.WriteLine();
 
 
                             }
@@ -360,7 +360,23 @@ namespace JobApplicationTracker
             }
         }
 
-        static void JobMenu()
+       static void printjob(JobService job)
+        {
+            foreach(var i in job.GetAll())
+            {
+                Console.WriteLine($"ID: {i.Id}");
+                Console.WriteLine($"Title: {i.Title}");
+                Console.WriteLine($"Description: {i.Description}");
+                Console.WriteLine($"Salary: {i.Salary}");
+                Console.WriteLine($"Location: {i.Location}");
+                Console.WriteLine($"Is Open: {(i.IsOpen ? "Yes":"No" )}");
+                Console.WriteLine($"Posted Date: {i.PostedDate}");
+                Console.WriteLine($"Company ID: {i.CompanyId}");
+                Console.WriteLine($"Recruiter ID: {i.RecruiterId}");
+                Console.WriteLine("--------------------------------");
+            }
+        }
+        static void JobMenu(JobService jobservice)
         {
             while(true)
             {
@@ -369,12 +385,132 @@ namespace JobApplicationTracker
             switch (ch)
             {
                 case "1":
+                        {
+                            Console.WriteLine("Enter Job ID:");
+                            int id;
+                            while (!int.TryParse(Console.ReadLine(), out id) || id <= 0)
+                            {
+                                Console.WriteLine("Invalid ID. Please enter a valid number:");
+                            }
+
+                            Console.WriteLine("Enter Job Title:");
+                            string title = Console.ReadLine() ?? "";
+                            while (string.IsNullOrWhiteSpace(title))
+                            {
+                                Console.WriteLine("Title is required. Please enter a valid title:");
+                                title = Console.ReadLine() ?? "";
+                            }
+
+                            Console.WriteLine("Enter Job Description:");
+                            string description = Console.ReadLine() ?? "";
+
+                            Console.WriteLine("Enter Salary:");
+                            decimal salary;
+                            while (!decimal.TryParse(Console.ReadLine(), out salary) || salary < 0)
+                            {
+                                Console.WriteLine("Invalid Salary. Please enter a valid salary:");
+                            }
+
+                            Console.WriteLine("Enter Job Location:");
+                            string location = Console.ReadLine() ?? "";
+
+                            Console.WriteLine("Enter Company ID:");
+                            int companyId;
+                            while (!int.TryParse(Console.ReadLine(), out companyId) || companyId <= 0)
+                            {
+                                Console.WriteLine("Invalid Company ID. Please enter a valid number:");
+                            }
+
+                            Console.WriteLine("Enter Recruiter ID:");
+                            int recruiterId;
+                            while (!int.TryParse(Console.ReadLine(), out recruiterId) || recruiterId <= 0)
+                            {
+                                Console.WriteLine("Invalid Recruiter ID. Please enter a valid number:");
+                            }
+
+                            Job newJob = new Job()
+                            {
+                                Id = id,
+                                Title = title,
+                                Description = description,
+                                Salary = salary,
+                                Location = location,
+                                CompanyId = companyId,
+                                RecruiterId = recruiterId,
+                                PostedDate = DateTime.Now
+                            };
+
+                            Console.WriteLine(jobservice.Add(newJob));
+                            printjob(jobservice);
+
+
+                        }
                     break;
                 case "2":
+                        {
+                            Console.WriteLine("Enter Job ID:");
+                            int id;
+                            while (!int.TryParse(Console.ReadLine(), out id) || id <= 0)
+                                Console.WriteLine("Invalid ID. Please enter a valid number:");
+
+                            Console.WriteLine("Enter Job Title:");
+                            string title = Console.ReadLine() ?? "";
+                            while (string.IsNullOrWhiteSpace(title))
+                            {
+                                Console.WriteLine("Title is required. Please enter a valid title:");
+                                title = Console.ReadLine() ?? "";
+                            }
+
+                            Console.WriteLine("Enter Job Description:");
+                            string description = Console.ReadLine() ?? "";
+
+                            Console.WriteLine("Enter Salary:");
+                            decimal salary;
+                            while (!decimal.TryParse(Console.ReadLine(), out salary) || salary < 0)
+                                Console.WriteLine("Invalid Salary. Please enter a valid salary:");
+
+                            Console.WriteLine("Enter Job Location:");
+                            string location = Console.ReadLine() ?? "";
+
+                            Console.WriteLine("Enter Company ID:");
+                            int companyId;
+                            while (!int.TryParse(Console.ReadLine(), out companyId) || companyId <= 0)
+                                Console.WriteLine("Invalid Company ID. Please enter a valid number:");
+
+                            Console.WriteLine("Enter Recruiter ID:");
+                            int recruiterId;
+                            while (!int.TryParse(Console.ReadLine(), out recruiterId) || recruiterId <= 0)
+                                Console.WriteLine("Invalid Recruiter ID. Please enter a valid number:");
+
+                            Job updatedJob = new Job()
+                            {
+                                Id = id,
+                                Title = title,
+                                Description = description,
+                                Salary = salary,
+                                Location = location,
+                                CompanyId = companyId,
+                                RecruiterId = recruiterId
+                            };
+
+                            Console.WriteLine(jobservice.Update(id, updatedJob));
+                            printjob(jobservice);
+                        }
                     break;
                 case "3":
+                        {
+                            Console.WriteLine("Enter Job ID:");
+                            int id;
+                            while (!int.TryParse(Console.ReadLine(), out id) || id <= 0)
+                                Console.WriteLine("Invalid ID. Please enter a valid number:");
+                            Console.WriteLine((jobservice.remove(id) ? "Remove Successfully " : "Invaild Id , Job not found !"));
+                            printjob(jobservice);
+                        }
                     break;
                 case "4":
+                        {
+
+                        }
                     break;
                 case "5":
                     break;
@@ -558,6 +694,14 @@ namespace JobApplicationTracker
 
 
             DataStore<Job> jobs = new DataStore<Job>();
+            JobService jobService = new JobService(jobs, companies, Recruiters);
+            jobService.Add(j1);
+            jobService.Add(j2);
+            jobService.Add(j3);
+            jobService.Add(j4);
+            jobService.Add(j5);
+            jobService.Add(j6);
+
 
             ////////////////////
 
@@ -657,7 +801,7 @@ namespace JobApplicationTracker
                         RecruiterMenu(recruiterService);
                         break;
                     case 3:
-                        JobMenu();
+                        JobMenu(jobService);
                         break;
                     case 4:
                         CandidateMenu();

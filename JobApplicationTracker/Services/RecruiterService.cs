@@ -37,7 +37,7 @@ namespace JobApplicationTracker.Services
         {
             Recruiter? r = Recruiterlist.GetById(id);
          
-            if (r == null && id != rec.Id)
+            if (r == null || id != rec.Id)
             {
                 return "Invaild Id , Recruiter not found ! ";
             }
