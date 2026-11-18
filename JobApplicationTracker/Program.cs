@@ -674,7 +674,7 @@ namespace JobApplicationTracker
 
         }
 
-        static void ApplicationMenu()
+        static void ApplicationMenu(ApplicationService applicationService)
         {
 
             while (true) { 
@@ -683,8 +683,35 @@ namespace JobApplicationTracker
             switch (ch)
             {
                 case "1":
+                        {
+                            Console.WriteLine("Enter Candidate ID:");
+                            int canid;
+                            while (!int.TryParse(Console.ReadLine(), out canid) || canid <= 0)
+                                Console.WriteLine("Invalid ID. Please enter a valid number:");
+
+                            Console.WriteLine("Enter Job ID:");
+                            int jobid;
+                            while (!int.TryParse(Console.ReadLine(), out jobid) || jobid <= 0)
+                                Console.WriteLine("Invalid ID. Please enter a valid number:");
+
+                            Console.WriteLine(applicationService.Apply_to_job(jobid , canid));
+
+                        }
                     break;
                 case "2":
+                        {
+                           
+                            foreach (var i in applicationService.GetAll())
+                            {
+                                Console.WriteLine($"ID: {i.Id}");
+                                Console.WriteLine($"Job ID: {i.JobId}");
+                                Console.WriteLine($"Candidate ID: {i.CandidateId}");
+                                Console.WriteLine($"Applied Date: {i.AppliedDate}");
+                                Console.WriteLine($"Status: {i.Status}");
+                                Console.WriteLine("--------------------------------");
+                            }
+
+                        }
                     break;
                 case "3": return;
                     break;
@@ -901,6 +928,8 @@ namespace JobApplicationTracker
             candidateService.Add(cand4);
             candidateService.Add(cand5);
 
+            DataStore<Application> applications = new DataStore<Application>();
+            ApplicationService applicationService = new ApplicationService(applications, candidateService, jobService, companyService);
 
             /////////////////////////////////////
             /////////////////////////////////////
@@ -936,7 +965,7 @@ namespace JobApplicationTracker
                         CandidateMenu(candidateService);
                         break;
                     case 5:
-                        ApplicationMenu();
+                        ApplicationMenu(applicationService);
                         break;
                     case 6:
                         return;
