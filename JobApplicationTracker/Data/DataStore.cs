@@ -59,6 +59,29 @@ namespace JobApplicationTracker.Data
 
         }
 
+      public List<T> Find (Predicate<T> pre)
+        {
+           List<T> list = [];
+
+            foreach(var i in items)
+            {
+                if(pre(i))
+                {
+                    list.Add(i);
+                }
+            }
+
+            return list;
+        }
+
+    public List<T> Sort(Comparison<T> comp)
+        {
+            List<T> sorted = [];
+
+            sorted.Sort(comp);
+
+            return sorted;
+        }
 
     }
 

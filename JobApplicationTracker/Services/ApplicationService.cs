@@ -58,8 +58,6 @@ namespace JobApplicationTracker.Services
 
         }
 
-
-
         public bool Remove(int id)
 
         {
@@ -75,8 +73,9 @@ namespace JobApplicationTracker.Services
                 return false;
             }
         }
-
         public List<Application> GetAll() { return Applicationlist.GetAll; }
+
+
 
     }
 

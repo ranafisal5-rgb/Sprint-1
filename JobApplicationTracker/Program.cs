@@ -376,12 +376,28 @@ namespace JobApplicationTracker
                 Console.WriteLine("--------------------------------");
             }
         }
+
+        static void printlist(List<Job> job)
+        {
+            foreach(var i in job)
+            {
+                Console.WriteLine($"ID: {i.Id}");
+                Console.WriteLine($"Title: {i.Title}");
+                Console.WriteLine($"Description: {i.Description}");
+                Console.WriteLine($"Salary: {i.Salary}");
+                Console.WriteLine($"Location: {i.Location}");
+                Console.WriteLine($"Is Open: {(i.IsOpen ? "Yes" : "No")}");
+                Console.WriteLine($"Posted Date: {i.PostedDate}");
+                Console.WriteLine($"Company ID: {i.CompanyId}");
+                Console.WriteLine($"Recruiter ID: {i.RecruiterId}");
+                Console.WriteLine("--------------------------------");
+            }
+        }
         static void JobMenu(JobService jobservice)
         {
             while(true)
             {
-            Console.WriteLine("========== JOBS ==========\r\n1. Add Job\r\n2. Update Job\r\n3. Remove Job\r\n4. List All Jobs\r\n5. Find Job By ID\r\n6. Back");
-            string ch = Console.ReadLine();
+                Console.WriteLine("========== JOBS ==========\r\n1. Add Job\r\n2. Update Job\r\n3. Remove Job\r\n4. List All Jobs\r\n5. Find Job By ID\r\n6. Search By Title\r\n7. Search By Minimum Salary\r\n8. Search By Title and Minimum Salary\r\n9. Sort By Salary Ascending\r\n10. Sort By Salary Descending\r\n11. Sort By Title\r\n12. Back"); string ch = Console.ReadLine();
             switch (ch)
             {
                 case "1":
@@ -503,7 +519,7 @@ namespace JobApplicationTracker
                             int id;
                             while (!int.TryParse(Console.ReadLine(), out id) || id <= 0)
                                 Console.WriteLine("Invalid ID. Please enter a valid number:");
-                            Console.WriteLine((jobservice.remove(id) ? "Remove Successfully " : "Invaild Id , Job not found !"));
+                            Console.WriteLine((jobservice.remove(id) ? "Remove Successfully " : "Invaild Id , Job not found or you try remove job in application !"));
                             printjob(jobservice);
                         }
                     break;
@@ -522,8 +538,52 @@ namespace JobApplicationTracker
                             Console.WriteLine((job != null ? "job found" : "Invaild Id , Job not found !"));
                         }
                     break;
-                case "6": return;
-                    break;
+                    case "6":
+                        {Console.Write("Enter Keyword: ");
+                        string keyword = Console.ReadLine() ?? "";
+                            printlist(jobservice.SearchByTitle(keyword));
+                        }
+                        break;
+
+                    case "7":
+                        {Console.Write("Enter Minimum Salary: ");
+                            if (decimal.TryParse(Console.ReadLine(), out decimal minSalary) && minSalary >= 0)
+                                printlist(jobservice.SearchByMinimumSalary(minSalary));
+                            else
+                                Console.WriteLine("Invalid Salary");
+                        }
+                        break;
+
+                    case "8":
+                       { Console.Write("Enter Keyword: ");
+                        string searchKeyword = Console.ReadLine() ?? "";
+
+                        Console.Write("Enter Minimum Salary: ");
+                            if (decimal.TryParse(Console.ReadLine(), out decimal salary) && salary >= 0)
+                                printlist(jobservice.SearchJobs(searchKeyword, salary));
+                            else
+                                Console.WriteLine("Invalid Salary");
+                        }
+                        break;
+
+                    case "9":
+                        printlist(jobservice.SortBySalary(true));
+{
+                            break;
+}
+                    case "10":
+{
+                            printlist(jobservice.SortBySalary(false));
+}                        break;
+
+                    case "11":
+{
+                            printlist(jobservice.SortByTitle());
+}                        break;
+
+                    case "12":
+                        return;
+                        break;
                 default:
                     Console.WriteLine("invalud number");
                     break;
@@ -842,14 +902,6 @@ namespace JobApplicationTracker
             };
 
 
-            DataStore<Job> jobs = new DataStore<Job>();
-            JobService jobService = new JobService(jobs, companies, Recruiters);
-            jobService.Add(j1);
-            jobService.Add(j2);
-            jobService.Add(j3);
-            jobService.Add(j4);
-            jobService.Add(j5);
-            jobService.Add(j6);
 
 
             ////////////////////
@@ -927,9 +979,18 @@ namespace JobApplicationTracker
             candidateService.Add(cand3);
             candidateService.Add(cand4);
             candidateService.Add(cand5);
+            //////
 
             DataStore<Application> applications = new DataStore<Application>();
+            DataStore<Job> jobs = new DataStore<Job>();
+            JobService jobService = new JobService(jobs, companies, Recruiters, applications);
             ApplicationService applicationService = new ApplicationService(applications, candidateService, jobService, companyService);
+            jobService.Add(j1);
+            jobService.Add(j2);
+            jobService.Add(j3);
+            jobService.Add(j4);
+            jobService.Add(j5);
+            jobService.Add(j6);
 
             /////////////////////////////////////
             /////////////////////////////////////
