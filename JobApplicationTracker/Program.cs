@@ -10,6 +10,7 @@ namespace JobApplicationTracker
 
     internal class Program
     {
+
        static void CompanyMenu(CompanyService companyService)
         {
             while(true)
@@ -805,6 +806,7 @@ namespace JobApplicationTracker
 
             DataStore<Company> companies = new DataStore<Company>();
             CompanyService companyService = new CompanyService(companies);
+            companyService.CompanyApproved += infocompany ;
             companyService.Add(TechNova);
             companyService.Add(CloudNine);
             companyService.Add(DevSphere);
@@ -1082,6 +1084,12 @@ namespace JobApplicationTracker
         {
             stuent s = (stuent)o;
             Console.WriteLine($"the passed grade was {t.passgrae}");
+        }
+
+        public static void infocompany(object o , CompanyApprovedEventArgs c)
+        {
+            Console.WriteLine($"{c.Company.Name} Company is approved now !");
+
         }
     }
 }

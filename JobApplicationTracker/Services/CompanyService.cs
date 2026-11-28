@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace JobApplicationTracker.Services
 {
+
     public class CompanyService 
     {
 
@@ -65,6 +66,7 @@ namespace JobApplicationTracker.Services
         {
             return companylist.GetById(id);
         }
+        public event EventHandler<CompanyApprovedEventArgs> CompanyApproved;
 
         public bool Chang_Status(int id , Company_Status status)
         {
@@ -74,7 +76,12 @@ namespace JobApplicationTracker.Services
             if(c != null)
             {
               undostatus.Push((c.Id , c.Status));
-              c.Status = status;
+                Company_Status oldStatus = c.Status;
+                c.Status = status;
+                if(oldStatus != Company_Status.Approved && status == Company_Status.Approved)
+                {
+                    CompanyApproved?.Invoke(this, new CompanyApprovedEventArgs(c));
+                }
                 return true;
             }
             else
@@ -82,6 +89,7 @@ namespace JobApplicationTracker.Services
                 return false;
             }       
         }
+
 
         public string Undo ()
         {

@@ -8,7 +8,7 @@ namespace JobApplicationTracker.Models
 {
     public enum Company_Status { Pending, Approved, Rejected }
 
-    public class Company :IEntity
+    public class Company : IEntity
     {
         public int Id { set; get; } //unique
 
