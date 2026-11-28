@@ -1,4 +1,5 @@
 ﻿using JobApplicationTracker.Data;
+using JobApplicationTracker.EventArgsClasses;
 using JobApplicationTracker.Models;
 using JobApplicationTracker.Practice;
 using JobApplicationTracker.Services;
@@ -989,6 +990,7 @@ namespace JobApplicationTracker
             DataStore<Job> jobs = new DataStore<Job>();
             JobService jobService = new JobService(jobs, companies, Recruiters, applications);
             ApplicationService applicationService = new ApplicationService(applications, candidateService, jobService, companyService);
+            applicationService.ApplicationSubmitted += infoapplication;
             jobService.Add(j1);
             jobService.Add(j2);
             jobService.Add(j3);
@@ -1091,5 +1093,11 @@ namespace JobApplicationTracker
             Console.WriteLine($"{c.Company.Name} Company is approved now !");
 
         }
+
+        public static EventHandler<ApplicationSubmittedEventAegs> infoapplication = (o, app) =>
+             {
+                 Console.WriteLine($"{app.candidate.FullName} you applayed on {app.job.Title} Job whith Salary {app.job.Salary} /n " +
+                     $"your application id : {app.application.Id}");
+             };
     }
 }

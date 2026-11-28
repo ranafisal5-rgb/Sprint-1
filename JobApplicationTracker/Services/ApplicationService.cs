@@ -1,4 +1,5 @@
 ﻿using JobApplicationTracker.Data;
+using JobApplicationTracker.EventArgsClasses;
 using JobApplicationTracker.Models;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,8 @@ namespace JobApplicationTracker.Services
         private HashSet<(int jobid, int candidateid)> jobcand = [];
 
         public ApplicationService(DataStore<Application> app , CandidateService can , JobService J , CompanyService com) { Applicationlist = app; candidate = can; company = com; Job = J; }
-        
+
+        public event EventHandler<ApplicationSubmittedEventAegs> ApplicationSubmitted;
         public string Apply_to_job(int idjob , int idcand)
         {
            Job? j = Job.job_by_Id(idjob);
@@ -51,6 +53,7 @@ namespace JobApplicationTracker.Services
                 Application app = new Application() { Id = index++, CandidateId = idcand, JobId = idjob, Status = Application_Status.Submitted, AppliedDate = DateTime.Now };
                 Applicationlist.Add(app);
                 jobcand.Add((idjob, idcand));
+               ApplicationSubmitted?.Invoke(this, new ApplicationSubmittedEventAegs(app, j, can));
                 return "Application submitted successfully";
             
 
