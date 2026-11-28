@@ -742,7 +742,7 @@ namespace JobApplicationTracker
         {
 
             while (true) { 
-            Console.WriteLine("========== APPLICATIONS ==========\r\n1. Apply To Job\r\n2. List All Applications\r\n3. Back");
+            Console.WriteLine("========== APPLICATIONS ==========\r\n1. Apply To Job\r\n2. List All Applications\r\n3. Change Statues\r\n4. Back");
             string ch = Console.ReadLine();
             switch (ch)
             {
