@@ -78,6 +78,24 @@ namespace JobApplicationTracker.Services
         }
         public List<Application> GetAll() { return Applicationlist.GetAll; }
 
+        public event EventHandler<ApplicationStatusChangedEventArgs> ApplicationStatusChanged;
+        public bool Chang_Status(int id, Application_Status status)
+        {
+
+            Application? app = Applicationlist.GetById(id);
+
+            if (app != null)
+            {
+                Application_Status oldStatus = app.Status;
+                app.Status = status;
+                ApplicationStatusChanged?.Invoke(this , new ApplicationStatusChangedEventArgs(oldStatus , status));
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
 
     }

@@ -124,7 +124,7 @@ namespace JobApplicationTracker
                             {
                                 Console.WriteLine("Invalid ID. Please enter a number:");
                             }
-                            Console.WriteLine("Inter 1 Aproved\n2 Regected");
+                            Console.WriteLine("1 Aproved\n2 Regected");
                             string? state = Console.ReadLine()??"";
                             while(state != "1" && state != "2")
                             {
@@ -777,8 +777,83 @@ namespace JobApplicationTracker
 
                         }
                     break;
-                case "3": return;
+                case "3":
+                        {
+                            Console.WriteLine("Inter Application ID You Need To Change Status");
+                            int id;
+                            while (!int.TryParse(Console.ReadLine(), out id) || id <= 0)
+                            {
+                                Console.WriteLine("Invalid ID. Please enter a number:");
+                            }
+                            Console.WriteLine("1- UnderReview\n2- Interview\n3- Accepted\n4- Rejected");
+                            string? state = Console.ReadLine() ?? "";
+                            while (state != "1" && state != "2" && state != "3" && state != "4")
+                            {
+                                Console.WriteLine("please inter from 1 to 4");
+                                state = Console.ReadLine() ?? "";
+
+                            }
+
+                            if (state == "1")
+                            {
+                                if (applicationService.Chang_Status(id, Application_Status.UnderReview))
+                                {
+                                    Console.WriteLine("Status Changed successfully");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Invalid ID , company not found !");
+
+                                }
+
+
+                            }
+                            if (state == "2")
+                            {
+                                if (applicationService.Chang_Status(id, Application_Status.Interview))
+                                {
+                                    Console.WriteLine("Status Changed successfully");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Invalid ID , company not found !");
+
+                                }
+
+                            }
+
+                            if (state == "3")
+                            {
+                                if (applicationService.Chang_Status(id, Application_Status.Accepted))
+                                {
+                                    Console.WriteLine("Status Changed successfully");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Invalid ID , company not found !");
+
+                                }
+
+                            }
+
+                            if (state == "4")
+                            {
+                                if (applicationService.Chang_Status(id, Application_Status.Rejected))
+                                {
+                                    Console.WriteLine("Status Changed successfully");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Invalid ID , company not found !");
+
+                                }
+
+                            }
+
+                        }
                     break;
+                    case "4": return;
+                        break;
                 default:
                     Console.WriteLine("invalud number");
                     break;
@@ -991,6 +1066,7 @@ namespace JobApplicationTracker
             JobService jobService = new JobService(jobs, companies, Recruiters, applications);
             ApplicationService applicationService = new ApplicationService(applications, candidateService, jobService, companyService);
             applicationService.ApplicationSubmitted += infoapplication;
+            applicationService.ApplicationStatusChanged += changestatus;
             jobService.Add(j1);
             jobService.Add(j2);
             jobService.Add(j3);
@@ -1096,8 +1172,14 @@ namespace JobApplicationTracker
 
         public static EventHandler<ApplicationSubmittedEventAegs> infoapplication = (o, app) =>
              {
-                 Console.WriteLine($"{app.candidate.FullName} you applayed on {app.job.Title} Job whith Salary {app.job.Salary} /n " +
-                     $"your application id : {app.application.Id}");
+                 Console.WriteLine($"{app.candidate.FullName} you applayed on {app.job.Title} Job whith Salary {app.job.Salary} " +
+                     $"\n your application id : {app.application.Id}");
              };
+        public static EventHandler<ApplicationStatusChangedEventArgs> changestatus = (o, app) =>
+        {
+
+            Console.WriteLine($"your old status is {app.oldstatus} the new is {app.newstatus}");
+
+        };
     }
 }
