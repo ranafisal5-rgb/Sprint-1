@@ -1,7 +1,9 @@
 ﻿using JobApplicationTracker.Data;
 using JobApplicationTracker.Models;
+using JobApplicationTracker.Practice;
 using JobApplicationTracker.Services;
 using Microsoft.VisualBasic;
+using System.Reflection.Metadata;
 
 namespace JobApplicationTracker
 {
@@ -1010,7 +1012,30 @@ namespace JobApplicationTracker
                     "5. Manage Applications\r\n" +
                     "6. Exit\r\n\r\n" +
                     "Enter your choice:");
-                string choise = Console.ReadLine();
+                //Event
+                // stuent sub = new stuent("ahmed");
+                // sub.tests += (object o, testargs t) =>
+                // {
+                //     stuent s = (stuent)o;
+                //     Console.WriteLine($"congratulations {s.name} you are passed with {t.grade} from {t.fullgrade}");
+                // };
+                // sub.tests += namedmethod ;
+
+                //bool x = sub.pass(70 , 50 ,100);
+                // sub.tests -= namedmethod;
+                // publisher The class that raises the event 
+                //  subscribers the classes that  handle the event 
+                //If we have multiple subscribers, the delegates are executed in the order in which they subscribed.
+                 //If an exception occurs within one of them and it is not handled using a `try-catch` block:
+                //The execution of that specific handler will stop.
+                // and will propagate out of `Invoke()`.
+                //The remaining subscribers that follow will not be executed.
+
+
+
+
+
+    string choise = Console.ReadLine();
                 switch (choise)
                 {
                     case "1":
@@ -1052,6 +1077,11 @@ namespace JobApplicationTracker
 
 
 
+        }
+        public static void namedmethod(object o, testargs t)
+        {
+            stuent s = (stuent)o;
+            Console.WriteLine($"the passed grade was {t.passgrae}");
         }
     }
 }
